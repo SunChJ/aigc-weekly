@@ -1,0 +1,55 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "aigc-weekly-worker",
+  "main": "./index.ts",
+  "compatibility_date": "2025-11-29",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "minify": true,
+  "upload_source_maps": true,
+  "keep_vars": true,
+  "observability": {
+    "traces": {
+      "enabled": true
+    },
+    "logs": {
+      "enabled": true
+    }
+  },
+  "triggers": {
+    "crons": [
+      "0 0 * * 7"
+    ]
+  },
+  "workflows": [
+    {
+      "name": "aigc-weekly-workflow",
+      "binding": "CHAT_WORKFLOW",
+      "class_name": "ChatWorkflow"
+    }
+  ],
+  "containers": [
+    {
+      "name": "aigc-weekly-container",
+      "class_name": "AgentContainer",
+      "image": "../Dockerfile",
+      "instance_type": "standard-1",
+      "max_instances": 1
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "class_name": "AgentContainer",
+        "name": "AGENT_CONTAINER"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "new_sqlite_classes": ["AgentContainer"],
+      "tag": "container"
+    }
+  ]
+}
