@@ -41,20 +41,6 @@
   padding: 5px 10px;
 }
 
-/* Override menu trigger to look like language selector */
-.menu--theme-selector .menu__trigger {
-  color: var(--accent);
-  border: 2px solid var(--accent);
-  margin-left: 5px;
-  height: 100%;
-  padding: 3px 8px;
-  margin-bottom: 0 !important;
-  position: relative;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-}
-
 @media print {
   .header {
     display: none;
