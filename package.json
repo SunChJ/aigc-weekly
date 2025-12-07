@@ -10,7 +10,7 @@
   },
   "scripts": {
     "clean": "rimraf .next && rimraf .open-next && rimraf ./data/app",
-    "predev:agent": "mkdir -p ./data/app && ln -sf \"$PWD/agent/.claude\" \"$PWD/data/app\" && ln -sf \"$PWD/agent/CLAUDE.md\" \"$PWD/data/app\"",
+    "predev:agent": "mkdir -p ./data/app && ln -sf \"$PWD/agent/.claude\" \"$PWD/data/app\"",
     "dev:agent": "tsx --watch agent/index.ts",
     "debug:agent": "cross-env DEBUG=true npm run -s dev:agent",
     "build:agent": "tsdown agent/index.ts",
@@ -34,23 +34,23 @@
     "wrangler": "wrangler"
   },
   "dependencies": {
-    "@anthropic-ai/claude-agent-sdk": "^0.1.58"
+    "@anthropic-ai/claude-agent-sdk": "^0.1.60"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^6.3.0",
+    "@antfu/eslint-config": "^6.4.2",
     "@cloudflare/containers": "^0.0.30",
     "@eslint-react/eslint-plugin": "^2.3.12",
     "@hono/node-server": "^1.19.6",
     "@hono/node-ws": "^1.2.0",
     "@next/eslint-plugin-next": "^15.5.7",
-    "@opennextjs/cloudflare": "^1.14.3",
-    "@payloadcms/db-d1-sqlite": "^3.66.0",
-    "@payloadcms/next": "^3.66.0",
-    "@payloadcms/plugin-mcp": "^3.66.0",
-    "@payloadcms/richtext-lexical": "^3.66.0",
-    "@payloadcms/storage-r2": "^3.66.0",
-    "@payloadcms/translations": "^3.66.0",
-    "@payloadcms/ui": "^3.66.0",
+    "@opennextjs/cloudflare": "^1.14.4",
+    "@payloadcms/db-d1-sqlite": "^3.67.0",
+    "@payloadcms/next": "^3.67.0",
+    "@payloadcms/plugin-mcp": "^3.67.0",
+    "@payloadcms/richtext-lexical": "^3.67.0",
+    "@payloadcms/storage-r2": "^3.67.0",
+    "@payloadcms/translations": "^3.67.0",
+    "@payloadcms/ui": "^3.67.0",
     "@types/node": "22",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
@@ -58,7 +58,7 @@
     "cross-env": "^10.1.0",
     "dotenv": "^17.2.3",
     "eslint": "^9.39.1",
-    "eslint-plugin-format": "^1.0.2",
+    "eslint-plugin-format": "^1.1.0",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "graphql": "^16.12.0",
@@ -67,16 +67,16 @@
     "markdown-it-ts": "0.0.2-beta.7",
     "next": "^15.5.7",
     "overtype": "^2.0.6",
-    "payload": "^3.66.0",
+    "payload": "^3.67.0",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "rimraf": "^6.1.2",
     "rss": "^1.2.2",
     "simple-git-hooks": "^2.13.1",
-    "tsdown": "^0.16.8",
+    "tsdown": "^0.17.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "wrangler": "^4.52.1"
+    "wrangler": "^4.53.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
