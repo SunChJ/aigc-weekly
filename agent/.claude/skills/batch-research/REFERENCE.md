@@ -6,6 +6,7 @@
 - https://news.ycombinator.com/show Hacker News Show HN 专栏，抓取 AIGC 相关的原文内容！
 - https://t.me/s/miantiao_drafts 自己的 TG 频道，发布一些最近看到的好文或者工具，很重要！记得去抓原文内容！
 - https://www.solidot.org/search?tid=151 奇客的 AI 资讯，抓取 AIGC 相关的原文内容！
+- https://poche.app/explore Designer Engineering 的分享社区，抓取 AIGC 相关的原文内容！
 - https://app.daily.dev/squads/ai AI 专栏的 daily.dev 频道，抓取 AIGC 相关的原文内容！
 - https://app.daily.dev/squads/promptengineering Prompt Engineering 专栏的 daily.dev 频道，抓取 AIGC 相关的原文内容！
 - https://app.daily.dev/squads/vibecoding Vibecoding 的 daily.dev 频道，抓取 AIGC 相关的原文内容！
@@ -24,3 +25,4 @@
 
 - https://baoyu.io/ 行业大佬，必须关注！
 - https://www.bensbites.com/ Ben Tossell 的个人博客，洞察 AI 趋势。
+- https://www.lennysnewsletter.com/feed?sectionId=198869 Lenny's Newsletter: How I AI Podcast 的 RSS。
