@@ -10,6 +10,7 @@
 - https://app.daily.dev/squads/ai AI 专栏的 daily.dev 频道，抓取 AIGC 相关的原文内容！
 - https://app.daily.dev/squads/promptengineering Prompt Engineering 专栏的 daily.dev 频道，抓取 AIGC 相关的原文内容！
 - https://app.daily.dev/squads/vibecoding Vibecoding 的 daily.dev 频道，抓取 AIGC 相关的原文内容！
+- https://engineering.fyi/tag/generative-ai 聚合了大厂技术博客，抓取 AIGC 相关的原文内容！
 
 ## Blogs & Websites
 
@@ -20,6 +21,11 @@
 - https://github.blog/ai-and-ml/ GitHub 的 AI 与机器学习相关博客。
 - https://blog.continue.dev/ Continue AI 的官方博客，分享 AI 相关的技术与应用。
 - https://blog.kilo.ai/ Kilo AI 的官方博客，关注最新动态与技术分享。
+- https://cline.bot/blog/archive Cline AI 的官方博客，分享 AI 相关的技术与应用。
+- https://ampcode.com/chronicle Ampcode 的官方博客，关注 AI 与编程的结合。
+- https://cognition.ai/blog/1 Cognition AI 的官方博客，分享 AI 相关的技术与应用。
+- https://manus.im/zh-cn/blog Manus AI 的官方博客，关注 AI Agent 应用。
+- https://research.trychroma.com/ Chroma Research 博客，关注向量数据库与 AI 的结合。
 
 ## KOL & Influencers
 
