@@ -47,12 +47,12 @@ export const Weekly: CollectionConfig = {
       unique: true,
       admin: {
         position: 'sidebar',
-        description: '格式：Y + 年份(两位数) + W + 周数(两位数)，例如：Y25W10',
+        description: '格式：Y + 年份(两位数) + W + 周数(两位数)，例如：Y26W12',
       },
       validate: (value: string) => {
         const pattern = /^Y\d{2}W\d{2}$/
         if (!pattern.test(value)) {
-          return '期刊编号格式不正确，请使用格式：Y[年份]W[周数]，例如 Y25W10'
+          return '期刊编号格式不正确，请使用格式：Y[年份]W[周数]，例如 Y26W12'
         }
         return true
       },

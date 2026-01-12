@@ -69,5 +69,7 @@ model: opus
 # 工具
 
 - 读取文件工具
-- GitHub Star History 工具（如果有）或通过网络请求获取。
-  获取 GitHub 仓库的星标历史数据，`https://github.com/miantiao-me/aigc-weekly` 对于的数据是 `https://api.star-history.com/svg?repos=miantiao-me/aigc-weekly`
+- **GitHub Star History 查询**：通过 HTTP 请求获取 SVG 数据。
+  - API 格式：`https://api.star-history.com/svg?repos={owner}/{repo}`
+  - 示例：`https://api.star-history.com/svg?repos=miantiao-me/aigc-weekly`
+  - 用于判断项目是否有 Star 飙升趋势，辅助影响力评分。

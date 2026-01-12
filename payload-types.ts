@@ -177,7 +177,7 @@ export interface Weekly {
   summary: string;
   content: string;
   /**
-   * 格式：Y + 年份(两位数) + W + 周数(两位数)，例如：Y25W10
+   * 格式：Y + 年份(两位数) + W + 周数(两位数)，例如：Y26W12
    */
   issueNumber: string;
   status: 'draft' | 'published';

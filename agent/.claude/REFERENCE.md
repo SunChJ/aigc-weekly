@@ -2,7 +2,7 @@
 
 ## Important Resources
 
-- https://news.ycombinator.com/front Hacker News, 记得抓取 AIGC 相关资讯的原文内容！此信息源往前抓最近7天的数据，URL 格式是 `https://news.ycombinator.com/front?day=2025-11-11`, 其中 `2025-11-11` 替换为对应的日期
+- https://news.ycombinator.com/front Hacker News, 记得抓取 AIGC 相关资讯的原文内容！此信息源按本周范围（start_date 至 end_date）抓取，URL 格式是 `https://news.ycombinator.com/front?day=YYYY-MM-DD`，为每一天生成对应 URL
 - https://news.ycombinator.com/show Hacker News Show HN 专栏，抓取 AIGC 相关的原文内容！
 - https://drafts.miantiao.me/ 自己的频道，发布一些最近看到的好文或者工具，很重要！记得去抓原文内容！
 - https://www.solidot.org/search?tid=151 奇客的 AI 资讯，抓取 AIGC 相关的原文内容！
@@ -11,6 +11,7 @@
 - https://app.daily.dev/squads/promptengineering Prompt Engineering 专栏的 daily.dev 频道，抓取 AIGC 相关的原文内容！
 - https://app.daily.dev/squads/vibecoding Vibecoding 的 daily.dev 频道，抓取 AIGC 相关的原文内容！
 - https://engineering.fyi/tag/generative-ai 聚合了大厂技术博客，抓取 AIGC 相关的原文内容！
+- https://every.to/newsletter 高质量的 AI 理念表达，抓取 AIGC 相关的原文内容！
 
 ## Blogs & Websites
 
