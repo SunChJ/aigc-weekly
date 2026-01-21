@@ -76,12 +76,10 @@ export async function triggerWeeklyTask() {
   const session = await createRes.json() as { id: string }
   console.info(`Created session: ${session.id}`)
 
-  const promptRes = await container.fetch(
+  container.fetch(
     `http://container/session/${session.id}/command`,
     { method: 'POST', headers, body: JSON.stringify({ command: 'weekly', arguments: '' }) },
   )
-  if (!promptRes.ok)
-    throw new Error(`Failed to send prompt: ${promptRes.status}`)
 
   console.info(`Weekly task triggered: ${session.id}`)
 }

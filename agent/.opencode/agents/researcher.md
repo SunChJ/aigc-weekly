@@ -31,10 +31,25 @@ timezone: UTC+0
 
 ### 2. 识别页面类型
 
-| 类型       | 特征             | 处理方式                                  |
-| ---------- | ---------------- | ----------------------------------------- |
-| **列表页** | 包含多个文章链接 | 提取链接，深入抓取原文（深度不超过 3 层） |
-| **详情页** | 单篇文章正文     | 直接提取正文内容                          |
+| 类型       | 特征             | 处理方式               |
+| ---------- | ---------------- | ---------------------- |
+| **列表页** | 包含多个文章链接 | 提取链接，深入抓取原文 |
+| **详情页** | 单篇文章正文     | 直接提取正文内容       |
+
+### 深度爬取限制
+
+为避免请求爆炸，深度抓取需遵守以下硬上限：
+
+| 限制项                | 值  | 说明                                 |
+| --------------------- | --- | ------------------------------------ |
+| `max_links_per_layer` | 10  | 每层最多提取 10 个链接               |
+| `max_total_requests`  | 30  | 单个数据源最多发起 30 次请求         |
+| `max_depth`           | 2   | 最大深度 2 层（入口页 + 1 层子页面） |
+
+**超出限制时，优先保留**：
+
+1. 标题明确包含 AIGC/AI/LLM/GPT/Claude 等关键词的链接
+2. 在页面中位置靠前的链接
 
 ### 3. 内容筛选
 
@@ -88,41 +103,27 @@ source_name: 来源名称
 
 **不可重试错误**：HTTP 403、HTTP 404、解析失败
 
-## 失败记录
+## 日志记录
 
-抓取失败时，追加记录到 `logs/crawl-failures.jsonl`：
+抓取过程中的状态通过返回值传递给调用方（batch-research），由调用方统一写入 `logs/weekly-{week_id}.log`。
 
-```json
-{
-  "url": "https://example.com/article",
-  "source_name": "Example",
-  "error_code": "429",
-  "error_message": "Too Many Requests",
-  "retry_count": 2,
-  "timestamp": "2026-03-25T12:34:56Z",
-  "week_id": "Y26W12"
-}
+**返回格式**：
+
+```yaml
+status: ok | fail
+source_name: Hacker News
+article_count: 5 # 成功时
+error_code: '429' # 失败时
+error_message: Too Many Requests # 失败时
+retry_count: 2 # 失败时
+files: # 成功时
+  - drafts/2026-03-22-hn-article1.md
+  - drafts/2026-03-22-hn-article2.md
 ```
 
 ## 输出
 
-完成后返回简要状态：
-
-**成功**：
-
-```
-抓取完成：{source_name}
-- 文章数：N 篇
-- 文件：drafts/2026-03-22-hn-*.md
-```
-
-**失败**：
-
-```
-抓取失败：{source_name}
-- 错误：429 Too Many Requests
-- 重试次数：2
-```
+完成后返回上述 YAML 格式的状态信息，由调用方处理日志记录。
 
 ## 约束
 

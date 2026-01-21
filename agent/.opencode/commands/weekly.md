@@ -45,6 +45,18 @@ timezone: UTC+0
 2. 创建 `drafts/` 和 `logs/` 目录（如不存在）
 3. 生成参数块，用于传递给所有下游任务
 
+## 进度管理（产物即状态）
+
+每个阶段开始前，检查**产物是否存在**来判断恢复点：
+
+| 阶段    | 完成标志                          | 恢复动作                     |
+| ------- | --------------------------------- | ---------------------------- |
+| Phase 1 | `drafts/` 目录存在且有 `.md` 文件 | 跳过 Phase 1，进入 Phase 2   |
+| Phase 2 | `drafts.yaml` 文件存在            | 跳过 Phase 1-2，进入 Phase 3 |
+| Phase 3 | `{filename}` 文件存在             | 跳过 Phase 1-3，进入 Phase 4 |
+
+**日志说明**：`logs/weekly-{week_id}.log` 仅用于人类审计，不作为恢复依据。
+
 ## 工作流程
 
 请按照以下步骤操作，协调各个子任务完成工作：
@@ -53,42 +65,9 @@ timezone: UTC+0
 
 使用 `batch-research` 技能进行批量数据采集。
 
-**你需要完成以下步骤**：
+**输入参数**：将完整周刊参数传递给技能。
 
-1. **读取数据源列表**：从 `.opencode/REFERENCE.md` 获取所有数据源
-2. **生成 URL 列表**：
-   - 静态 URL：直接使用
-   - 动态 URL（Hacker News）：使用 `generateHNUrls(start_date, end_date)` 生成每日 URL
-3. **分批调度**：将 URL 按优先级分为 3 批，每批 10-12 个 URL
-4. **并发抓取**：每批内并发调用 `researcher` agent，等待当前批次全部完成后再进入下一批
-5. **汇总报告**：收集所有 researcher 返回的结果，生成 `logs/research-report.md`
-
-**分批策略**：
-
-| 批次    | 数据源类型          | 说明                          |
-| ------- | ------------------- | ----------------------------- |
-| Batch 1 | Important Resources | 高优先级，包括 HN、自己频道等 |
-| Batch 2 | Blogs & Websites    | 官方博客、技术网站            |
-| Batch 3 | KOL & Influencers   | 个人博客、Newsletter          |
-
-**调用 researcher 的参数格式**：
-
-```yaml
-url: https://news.ycombinator.com/front?day=2026-03-22
-source_name: Hacker News
-week_id: Y26W12
-start_date: 2026-03-22
-end_date: 2026-03-28
-timezone: UTC+0
-```
-
-**重要约束**：
-
-- 必须抓取所有数据源，不能跳过
-- 单个 researcher 失败不影响其他
-- 进入 Phase 2 之前，必须完成所有批次的抓取
-
-**产出**：`drafts/` 目录下的草稿文件 + `logs/research-report.md`
+**产出**：`drafts/` 目录下的草稿文件
 
 ### 2. 筛选信息 (Phase 2)
 
@@ -101,16 +80,19 @@ prompt: |
   ```yaml
   # 周刊参数
   week_id: {weekInfo.weekId}
+  week_number: {weekInfo.weekNumber}
+  year_short: {weekInfo.yearShort}
+  year_full: {weekInfo.yearFull}
   start_date: {weekInfo.startDate}
   end_date: {weekInfo.endDate}
-  timezone: UTC+0
+  timezone: {weekInfo.timezone}
 ````
 
 请对内容进行筛选、去重和打分，生成 drafts.yaml。
 
 ```
 
-- 产出：`drafts.yaml` 高价值内容列表
+**产出**：`drafts.yaml` 高价值内容列表
 
 ### 3. 撰写内容 (Phase 3)
 
@@ -124,17 +106,21 @@ prompt: |
 ```yaml
 # 周刊参数
 week_id: {weekInfo.weekId}
-title: {title}
-filename: {filename}
+week_number: {weekInfo.weekNumber}
+year_short: {weekInfo.yearShort}
+year_full: {weekInfo.yearFull}
 start_date: {weekInfo.startDate}
 end_date: {weekInfo.endDate}
+timezone: {weekInfo.timezone}
+title: {title}
+filename: {filename}
 ```
 
 请基于 drafts.yaml 撰写周刊，保存为 {filename}。
 
 ```
 
-- 产出：最终的 Markdown 周刊文件
+**产出**：最终的 Markdown 周刊文件
 
 ### 4. 审核与修订 (Phase 4)
 
@@ -148,8 +134,12 @@ prompt: |
 ```yaml
 # 周刊参数
 week_id: {weekInfo.weekId}
+week_number: {weekInfo.weekNumber}
+year_short: {weekInfo.yearShort}
+year_full: {weekInfo.yearFull}
 start_date: {weekInfo.startDate}
 end_date: {weekInfo.endDate}
+timezone: {weekInfo.timezone}
 ```
 
 ```
