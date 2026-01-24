@@ -37,7 +37,6 @@
     "@opennextjs/cloudflare": "^1.14.9",
     "@payloadcms/db-d1-sqlite": "^3.72.0",
     "@payloadcms/next": "^3.72.0",
-    "@payloadcms/plugin-mcp": "^3.72.0",
     "@payloadcms/richtext-lexical": "^3.72.0",
     "@payloadcms/storage-r2": "^3.72.0",
     "@payloadcms/translations": "^3.72.0",

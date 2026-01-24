@@ -44,17 +44,19 @@ timezone: UTC+0
 
 1. 调用 `getWeekInfo()` 计算时间参数
 2. 创建 `drafts/` 和 `logs/` 目录（如不存在）
-3. 生成参数块，用于传递给所有下游任务
+3. 创建 `published/` 目录（如不存在）
+4. 生成参数块，用于传递给所有下游任务
 
 ## 进度管理（产物即状态）
 
 每个阶段开始前，检查**产物是否存在**来判断恢复点：
 
-| 阶段    | 完成标志                          | 恢复动作                     |
-| ------- | --------------------------------- | ---------------------------- |
-| Phase 1 | `drafts/` 目录存在且有 `.md` 文件 | 跳过 Phase 1，进入 Phase 2   |
-| Phase 2 | `drafts.yaml` 文件存在            | 跳过 Phase 1-2，进入 Phase 3 |
-| Phase 3 | `{filename}` 文件存在             | 跳过 Phase 1-3，进入 Phase 4 |
+| 阶段    | 完成标志                            | 恢复动作                     |
+| ------- | ----------------------------------- | ---------------------------- |
+| Phase 1 | `drafts/` 目录存在且有 `.md` 文件   | 跳过 Phase 1，进入 Phase 2   |
+| Phase 2 | `drafts.yaml` 文件存在              | 跳过 Phase 1-2，进入 Phase 3 |
+| Phase 3 | `{filename}` 文件存在               | 跳过 Phase 1-3，进入 Phase 4 |
+| Phase 5 | `published/{week_id}.json` 文件存在 | 跳过 Phase 1-5，任务完成     |
 
 **日志说明**：`logs/weekly-{week_id}.log` 仅用于人类审计，不作为恢复依据。
 
@@ -150,10 +152,20 @@ timezone: {weekInfo.timezone}
 
 **循环逻辑**：
 
-- 如果 Reviewer 返回 "PASS"，则任务完成。
+- 如果 Reviewer 返回 "PASS"，进入 Phase 5 发布。
 - 如果 Reviewer 返回修改意见，调用 `writer` 子任务进行修改。
 - 再次调用 `reviewer` 子任务进行复核。
 - 此过程最多重复 3 次。
 
-请务必一次性完成所有任务，过程中无需向我确认，向我呈现最终的周刊内容。
+### 5. 发布为草稿 (Phase 5)
+
+使用 `publish-weekly` 技能将 `{filename}` 写入 Payload CMS，发布为草稿。
+
+**输入参数**：将完整周刊参数传递给技能（包含 `title` 与 `filename`）。
+
+**产出**：`published/{week_id}.json`（保存 CMS 响应，用于恢复与审计）。
 ```
+
+---
+
+请务必一次性完成所有任务，过程中无需向我确认。
