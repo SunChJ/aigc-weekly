@@ -42,6 +42,8 @@ export default async function WeeklyDetailPage({ params }: WeeklyDetailPageProps
           <div className="post-content">
             <p>未找到对应的周刊，请返回列表查看其它期刊。</p>
             <Link href="/weekly">返回列表</Link>
+            <span> · </span>
+            <Link href="/">返回首页</Link>
           </div>
         </div>
       </TerminalLayout>
