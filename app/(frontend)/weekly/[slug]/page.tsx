@@ -8,11 +8,17 @@ import { TagList } from '@/components/theme/TagList'
 import { TerminalLayout } from '@/components/theme/TerminalLayout'
 import { renderMarkdown } from '@/lib/markdown'
 import { getWeeklyBySlug } from '@/lib/weekly/data'
+import { listDailySlugs } from '@/lib/weekly/fs'
 
 interface WeeklyDetailPageProps {
   params: Promise<{
     slug: string
   }>
+}
+
+export async function generateStaticParams() {
+  const slugs = await listDailySlugs()
+  return slugs.map(slug => ({ slug }))
 }
 
 export async function generateMetadata({ params }: WeeklyDetailPageProps): Promise<Metadata> {

@@ -1,2 +1,3 @@
 // Placeholder generator.
-console.log('generate-weekly.mjs: placeholder (no-op)');
+// Keep lint clean until the real generator is implemented.
+console.info('generate-weekly.mjs: placeholder (no-op)')

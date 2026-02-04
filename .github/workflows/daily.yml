@@ -2,7 +2,7 @@ name: daily
 
 on:
   schedule:
-    - cron: "0 2 * * *" # 10:00 Asia/Shanghai
+    - cron: '0 2 * * *' # 10:00 Asia/Shanghai
   workflow_dispatch:
 
 permissions:

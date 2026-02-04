@@ -6,21 +6,17 @@ import { TagList } from '@/components/theme/TagList'
 import { TerminalLayout } from '@/components/theme/TerminalLayout'
 import { getWeeklyList } from '@/lib/weekly/data'
 
-interface WeeklyIndexPageProps {
-  searchParams?: Promise<Record<string, string | string[] | undefined>>
-}
+export const dynamic = 'force-static'
 
-export default async function WeeklyIndexPage({ searchParams }: WeeklyIndexPageProps) {
-  const params = await searchParams
-  const page = parsePage(params?.page)
-  const weeklyList = await getWeeklyList({ page })
+export default async function WeeklyIndexPage() {
+  const weeklyList = await getWeeklyList({ page: 1 })
 
   const { hasNextPage, hasPrevPage } = weeklyList.pagination
   const prevLink = hasPrevPage
-    ? { href: `/weekly?page=${weeklyList.pagination.page - 1}`, text: '上一页' }
+    ? { href: '/weekly', text: '上一页' }
     : undefined
   const nextLink = hasNextPage
-    ? { href: `/weekly?page=${weeklyList.pagination.page + 1}`, text: '下一页' }
+    ? { href: '/weekly', text: '下一页' }
     : undefined
 
   return (
@@ -52,16 +48,4 @@ export default async function WeeklyIndexPage({ searchParams }: WeeklyIndexPageP
       </div>
     </TerminalLayout>
   )
-}
-
-function parsePage(page: string | string[] | undefined) {
-  const value = Array.isArray(page) ? page[0] : page
-  if (!value)
-    return 1
-
-  const parsed = Number(value)
-  if (Number.isNaN(parsed) || parsed <= 0)
-    return 1
-
-  return Math.floor(parsed)
 }

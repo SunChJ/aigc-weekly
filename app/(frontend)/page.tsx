@@ -1,27 +1,25 @@
 import process from 'node:process'
+
 import Link from 'next/link'
+
 import { Pagination } from '@/components/theme/Pagination'
 import { PostMeta } from '@/components/theme/PostMeta'
 import { TagList } from '@/components/theme/TagList'
 import { TerminalLayout } from '@/components/theme/TerminalLayout'
 import { siteConfig } from '@/lib/config'
-import { getWeeklyList } from '../../lib/weekly/data'
+import { getWeeklyList } from '@/lib/weekly/data'
 
-interface HomePageProps {
-  searchParams?: Promise<Record<string, string | string[] | undefined>>
-}
+export const dynamic = 'force-static'
 
-export default async function HomePage({ searchParams }: HomePageProps) {
-  const params = await searchParams
-  const page = parsePage(params?.page)
-  const weeklyList = await getWeeklyList({ page })
+export default async function HomePage() {
+  const weeklyList = await getWeeklyList({ page: 1 })
 
   const { hasNextPage, hasPrevPage } = weeklyList.pagination
   const prevLink = hasPrevPage
-    ? { href: `/?page=${weeklyList.pagination.page - 1}`, text: '上一页' }
+    ? { href: '/', text: '上一页' }
     : undefined
   const nextLink = hasNextPage
-    ? { href: `/?page=${weeklyList.pagination.page + 1}`, text: '下一页' }
+    ? { href: '/', text: '下一页' }
     : undefined
 
   return (
@@ -29,7 +27,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <div className="index-content">
         <div className="framed">
           <p>
-            { siteConfig.description }
+            {siteConfig.description}
           </p>
           <p>
             <a href={`${process.env.NEXT_PUBLIC_BASE_URL}/rss.xml`} rel="alternate" target="_blank">
@@ -70,23 +68,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           </article>
         ))}
 
-        <Pagination
-          prev={prevLink}
-          next={nextLink}
-        />
+        <Pagination prev={prevLink} next={nextLink} />
       </div>
     </TerminalLayout>
   )
-}
-
-function parsePage(page: string | string[] | undefined) {
-  const value = Array.isArray(page) ? page[0] : page
-  if (!value)
-    return 1
-
-  const parsed = Number(value)
-  if (Number.isNaN(parsed) || parsed <= 0)
-    return 1
-
-  return Math.floor(parsed)
 }

@@ -8,12 +8,15 @@ Frontmatter fields:
 
 ```yaml
 ---
-slug: 2026-02-04           # used in URL: /weekly/<slug>
-title: "AI 时代·日刊精选"   # display title
-publishDate: "2026-02-04"  # ISO date
-summary: ""               # optional
-tags: ["ai", "tools"]      # optional
-status: published          # published | draft
+slug: 2026-02-04
+# NOTE: these are examples; quotes may be required depending on your YAML parser.
+title: AI 时代·日刊精选
+publishDate: 2026-02-04
+summary: ''
+tags:
+  - ai
+  - tools
+status: published # published | draft
 ---
 ```
 
