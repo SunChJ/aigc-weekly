@@ -1,21 +1,11 @@
-import type { PaginatedDocs } from 'payload'
-import type { Weekly } from '@/payload-types'
-import payloadConfig from '@payload-config'
-import { getPayload } from 'payload'
+import type { WeeklyListResult, WeeklyListParams } from './types'
+import type { DailyDoc } from './fs'
+
 import { cache } from 'react'
+import { getDailyBySlug, listDailyDocs } from './fs'
 
-const DEFAULT_PAGE_SIZE = 3
-const MAX_PAGE_SIZE = 50
-
-const getPayloadClient = cache(async () => {
-  const config = await payloadConfig
-  return getPayload({ config })
-})
-
-export interface WeeklyListParams {
-  page?: number
-  pageSize?: number
-}
+// NOTE: Migration to filesystem-backed content.
+// We keep the old public function names so the frontend routes don't need to change.
 
 export interface WeeklyListItem {
   id: number
@@ -27,121 +17,65 @@ export interface WeeklyListItem {
   tags?: string[]
 }
 
-export interface WeeklyListResult {
-  items: WeeklyListItem[]
-  pagination: {
-    page: number
-    pageSize: number
-    totalDocs: number
-    totalPages: number
-    hasPrevPage: boolean
-    hasNextPage: boolean
+function toWeeklyListItem(doc: DailyDoc, id: number): WeeklyListItem {
+  return {
+    id,
+    slug: doc.slug,
+    title: doc.title,
+    summary: doc.summary || '',
+    content: doc.content,
+    publishDate: doc.publishDate,
+    tags: doc.tags || [],
   }
 }
 
-export async function getWeeklyList(params: WeeklyListParams = {}): Promise<WeeklyListResult> {
-  const page = normalizePositiveInteger(params.page, 1)
-  const pageSize = normalizePositiveInteger(params.pageSize, DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE)
+const getAll = cache(async () => {
+  const docs = await listDailyDocs()
+  // newest first by publishDate/slug
+  docs.sort((a, b) => (b.publishDate || '').localeCompare(a.publishDate || ''))
+  return docs
+})
 
-  const payload = await getPayloadClient()
-  const response = (await payload.find({
-    collection: 'weekly',
-    limit: pageSize,
-    page,
-    where: {
-      status: {
-        equals: 'published',
-      },
-    },
-    sort: '-publishDate',
-  })) as PaginatedDocs<Weekly>
+export async function getWeeklyList(params: WeeklyListParams = {}): Promise<WeeklyListResult> {
+  const page = params.page ?? 1
+  const pageSize = params.pageSize ?? 3
+
+  const docs = await getAll()
+  const totalDocs = docs.length
+  const totalPages = Math.max(1, Math.ceil(totalDocs / pageSize))
+  const p = Math.min(Math.max(1, page), totalPages)
+
+  const start = (p - 1) * pageSize
+  const slice = docs.slice(start, start + pageSize)
 
   return {
-    items: response.docs.map(doc => ({
-      id: doc.id,
-      slug: doc.issueNumber,
-      title: doc.title,
-      summary: doc.summary,
-      content: doc.content,
-      publishDate: doc.publishDate,
-      tags: doc.tags?.map(t => t.value) ?? [],
-    })),
+    items: slice.map((d, idx) => toWeeklyListItem(d, start + idx + 1)),
     pagination: {
-      page: response.page,
-      pageSize: response.limit,
-      totalDocs: response.totalDocs,
-      totalPages: response.totalPages,
-      hasPrevPage: response.hasPrevPage,
-      hasNextPage: response.hasNextPage,
+      page: p,
+      pageSize,
+      totalDocs,
+      totalPages,
+      hasPrevPage: p > 1,
+      hasNextPage: p < totalPages,
     },
   }
 }
 
 export async function getWeeklyBySlug(slug: string) {
-  if (!slug) {
-    return null
-  }
+  const docs = await getAll()
+  const current = await getDailyBySlug(slug)
+  if (!current) return null
 
-  const payload = await getPayloadClient()
-  const response = (await payload.find({
-    collection: 'weekly',
-    limit: 1,
-    where: {
-      issueNumber: {
-        equals: slug.toUpperCase(),
-      },
-      status: {
-        equals: 'published',
-      },
-    },
-  })) as PaginatedDocs<Weekly>
-
-  const currentDoc = response.docs[0]
-  if (!currentDoc)
-    return null
-
-  // Fetch adjacent posts
-  const [prevDoc, nextDoc] = await Promise.all([
-    payload.find({
-      collection: 'weekly',
-      limit: 1,
-      where: {
-        publishDate: {
-          less_than: currentDoc.publishDate,
-        },
-        status: {
-          equals: 'published',
-        },
-      },
-      sort: '-publishDate',
-    }),
-    payload.find({
-      collection: 'weekly',
-      limit: 1,
-      where: {
-        publishDate: {
-          greater_than: currentDoc.publishDate,
-        },
-        status: {
-          equals: 'published',
-        },
-      },
-      sort: 'publishDate',
-    }),
-  ])
+  // adjacent by sorted list
+  const sorted = [...docs].sort((a, b) => (b.publishDate || '').localeCompare(a.publishDate || ''))
+  const idx = sorted.findIndex(d => d.slug === current.slug)
+  const prev = idx >= 0 ? sorted[idx + 1] : null
+  const next = idx > 0 ? sorted[idx - 1] : null
 
   return {
-    ...currentDoc,
-    prev: prevDoc.docs[0] ? { title: prevDoc.docs[0].title, slug: prevDoc.docs[0].issueNumber } : null,
-    next: nextDoc.docs[0] ? { title: nextDoc.docs[0].title, slug: nextDoc.docs[0].issueNumber } : null,
+    ...toWeeklyListItem(current, 0),
+    issueNumber: current.slug,
+    prev: prev ? { title: prev.title, slug: prev.slug } : null,
+    next: next ? { title: next.title, slug: next.slug } : null,
   }
-}
-
-function normalizePositiveInteger(value: number | undefined, fallback: number, max = Number.POSITIVE_INFINITY) {
-  if (typeof value !== 'number' || Number.isNaN(value) || value <= 0) {
-    return fallback
-  }
-
-  const normalized = Math.floor(value)
-  return Math.min(normalized, max)
 }
