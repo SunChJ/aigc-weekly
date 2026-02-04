@@ -1,7 +1,8 @@
-import type { WeeklyListResult, WeeklyListParams } from './types'
 import type { DailyDoc } from './fs'
+import type { WeeklyListParams, WeeklyListResult } from './types'
 
 import { cache } from 'react'
+
 import { getDailyBySlug, listDailyDocs } from './fs'
 
 // NOTE: Migration to filesystem-backed content.
@@ -64,7 +65,8 @@ export async function getWeeklyList(params: WeeklyListParams = {}): Promise<Week
 export async function getWeeklyBySlug(slug: string) {
   const docs = await getAll()
   const current = await getDailyBySlug(slug)
-  if (!current) return null
+  if (!current)
+    return null
 
   // adjacent by sorted list
   const sorted = [...docs].sort((a, b) => (b.publishDate || '').localeCompare(a.publishDate || ''))

@@ -1,6 +1,0 @@
-{
-  "extends": "../tsconfig.json",
-  "include": [
-    "./cloudflare-env.d.ts"
-  ]
-}

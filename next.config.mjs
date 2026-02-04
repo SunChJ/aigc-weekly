@@ -1,9 +1,9 @@
-import { withPayload } from '@payloadcms/next/withPayload'
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  expireTime: 43200, // 12h
-  serverExternalPackages: ['jose'],
+  output: 'export',
+  images: {
+    unoptimized: true,
+  },
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -18,4 +18,4 @@ const nextConfig = {
   },
 }
 
-export default withPayload(nextConfig, { devBundleServerPackages: false })
+export default nextConfig
